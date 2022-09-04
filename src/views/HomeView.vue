@@ -4,9 +4,9 @@
       <div class="gitTitle">
         github项目推送
       </div>
-      <el-scrollbar height="400px" >
-    <Recommend/>
-    </el-scrollbar>
+      <el-scrollbar height="400px" class="el_scroll" >
+        <Recommend/>
+      </el-scrollbar>
     </div>
     
     <div
@@ -99,6 +99,10 @@ export default {
       font-size: 25px;
       border-top-left-radius: 5px;
       border-top-right-radius: 5px;
+    }
+    .el_scroll {
+      background-color: rgba($color: white, $alpha: 0.4);
+      backdrop-filter: blur(4px);
     }
   }
   .li {

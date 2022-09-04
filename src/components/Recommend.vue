@@ -1,21 +1,10 @@
 <template>
+  <div v-show="githubList.length == 0" class="loading">
+    <el-icon style="font-size: 5rem"><Loading /></el-icon>
+    <div style="font-size: 3rem">加载中</div>
+  </div>
+  
   <div class="out">
-    <ul>
-      <li v-for="item in githubList.splice(1, 10)" :key="item.id" class="gitLi">
-        <div class="in">
-          <a :href="item.url">
-            <div class="title">{{ item.username }}/{{ item.reponame }}</div></a
-          >
-          <div class="description">{{ item.description }}</div>
-          <div class="more">
-            <div class="star"><span class="iconfont icon-star"></span>{{ item.starCount }}</div>
-            <div class="fork"><span class="iconfont icon-code-fork"></span>{{ item.forkCount }}</div>
-            <div class="language" v-show="item.lang"><span class="iconfont icon-shuju"></span>{{ item.lang }}</div>
-          </div>
-        </div>
-      </li>
-    </ul>
-
     <ul>
       <li v-for="item in githubList" :key="item.id" class="gitLi">
         <div class="in">
@@ -51,10 +40,15 @@ export default {
         method: "post",
       });
     onMounted(() => {
-      postRecommend().then((res) => {
-        state.githubList = res.data.data;
-        // console.log(state.githubList);
-      });
+      try {
+        postRecommend().then((res) => {
+          state.githubList = res.data.data;
+          // console.log(state.githubList);
+        });
+      } catch(err) {
+        console.log('github推荐请求失败', err)
+      }
+      
     });
     return {
       ...toRefs(state),
@@ -65,20 +59,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.loading {
+  padding-top: 10rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .out {
-//   margin: 20px 0;
-  background-color: rgba($color: white, $alpha: 0.4);
-  backdrop-filter: blur(4px);
+  //   margin: 20px 0;
+  // background-color: rgba($color: white, $alpha: 0.4);
+  // backdrop-filter: blur(4px);
   width: 100%;
   // border-radius: 5px;
   display: flex;
   flex-direction: row;
 
   ul {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
     padding: 5px;
+    column-count: 2;
+    column-gap: 10px;
     li {
       border: 2px solid transparent;
       background-color: rgba($color: black, $alpha: 0.2);
@@ -88,6 +88,7 @@ export default {
       padding: 5px 10px;
       overflow: hidden;
       transition: border 0.5s, background-color 0.5s ;
+      break-inside: avoid;
       a {
         text-decoration: none;
         font-size: 25px;
@@ -95,7 +96,6 @@ export default {
             transition: color 0.5s;
             color: white;
         }
-        
       }
       
       .description {
